@@ -49,6 +49,51 @@ rawSet.insertAdjacentElement('beforeend', checkBoxContainer);
 
 
 
+//Создаем Таймер игры
+let timerContainer = document.createElement('div');
+timerContainer.setAttribute('style', `height:25px;width:300px;position:absolute;top:3px;left:250px;color:#4fb44f;font-size:22px;line-height:25px;`);
+rawSet.insertAdjacentElement('beforeend', timerContainer);
+let timerPage = document.querySelectorAll('b');
+let timerString = '';
+// Ищем таймер на странице
+for (let i = 0; i < timerPage.length; i++) {
+    if (timerPage[i].innerText.trim() == 'si_timeleft') {
+        timerString = (timerPage[i].parentElement.nextElementSibling.innerText).trim().split(':');
+    }
+}
+
+
+timerMin = Number.parseInt(timerString[1]);
+timerSec = Number.parseInt(timerString[2]);
+
+timeMinut = timerMin * 60 + timerSec;
+timer = setInterval(function() {
+    let seconds = timerSec, // Получаем секунды
+        minutes = timerMin; // Получаем минуты
+    // Условие если время закончилось то...
+    if (timeMinut <= 0) {
+        // Таймер удаляется
+        clearInterval(timer);
+        // Выводит сообщение что время закончилось
+
+        // Создаём строку с выводом времени
+        let strTimer = 'warming-up';
+        // Выводим строку в блок для показа таймера
+        timerContainer.innerHTML = strTimer;
+    } else { // Иначе
+        // Создаём строку с выводом времени
+        let strTimer = `${(minutes < 10 ? '0' : '') + minutes}:${(seconds < 10 ? '0' : '') + seconds} ( time left )`;
+        // Выводим строку в блок для показа таймера
+        timerContainer.innerHTML = strTimer;
+    }
+    if (seconds === 0) {
+        --timerMin;
+        timerSec = 60;
+    }
+    --timerSec;
+    --timeMinut; // Уменьшаем таймер
+}, 1000)
+
 function changeColorText(label, checkBox) {
     if (checkBox.checked) {
         label.setAttribute('style', `font-size:18px;line-height:24px;text-align:left;width:0px;display:block;
