@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name     ETQW-gs4u.net
-// @version  1.0
+// @version  1.1
 // @include  https://www.gs4u.net/ru/s/*
 // @grant    none
 // @author acubick
@@ -8,9 +8,68 @@
 // @namespace https://greasyfork.org/users/776468
 // ==/UserScript==
 
+
+let tabsInnerContent = document.querySelector('#tabs-innerTabs');
+tabsInnerContent.setAttribute("style", `position:relative;`);
+let rawSet = document.createElement('div');
+rawSet.setAttribute("style", `position:relative;background-color:rgba(51,51,51,.7);height:30px;width:calc(100%-1px);top:0;left:0px;
+border-left:1px;border-left-color:rgb(119,119,119);border-left-style:solid;
+border-bottom:1px;border-bottom-color:rgb(119,119,119);border-bottom-style:solid;
+border-right:1px;border-right-color:rgb(119,119,119);border-right-style:solid;
+display:flex;justify-content:start;`);
+tabsInnerContent.insertAdjacentElement('afterend', rawSet);
+
+let copyLink = document.createElement('a');
+copyLink.setAttribute('title', 'Copy data');
+copyLink.setAttribute('style', `text-align:center;position:absolute;color:pink;top:0;`);
+copyLink.setAttribute('id', 'copy_data');
+let copyIcon = document.createElement('i');
+copyIcon.setAttribute('class', 'fas fa-copy');
+copyLink.setAttribute('style', `font-size:24px;cursor:pointer;position:relative;top:3px;left:15px;background:transparent;`);
+copyLink.appendChild(copyIcon);
+rawSet.appendChild(copyLink);
+
+
+//Создание чекбокса
+let checkBoxContainer = document.createElement('div');
+checkBoxContainer.setAttribute('style', `position:relative;top:-3px;left:50px;background-color:transparent;width:200px;`);
+checkBoxContainer.setAttribute('id', 'checkBox_Container');
+let label = document.createElement('label');
+let checkBox = document.createElement('input');
+label.innerText = 'AutoReload';
+label.setAttribute('style', `font-size:18px;line-height:24px;text-align:left;width:0px;display:block;
+		height:35px;line-height:35px;color:#f65858;padding-left:38px;`);
+label.setAttribute('for', 'checkbox_reload');
+checkBox.setAttribute('type', 'checkbox');
+checkBox.setAttribute('id', 'checkbox_reload');
+checkBox.setAttribute('style', `width:25px;height:25px;position:absolute;top:3px;left:0;`);
+checkBoxContainer.appendChild(label);
+checkBoxContainer.appendChild(checkBox);
+rawSet.insertAdjacentElement('beforeend', checkBoxContainer);
+
+
+
+function changeColorText(label, checkBox) {
+    if (checkBox.checked) {
+        label.setAttribute('style', `font-size:18px;line-height:24px;text-align:left;width:0px;display:block;
+	height:35px;line-height:35px;color:#75db6c;padding-left:38px;`);
+    }
+    if (!checkBox.checked) {
+        label.setAttribute('style', `font-size:18px;line-height:24px;text-align:left;width:0px;display:block;
+	height:35px;line-height:35px;color:#f65858;padding-left:38px;`);
+    }
+}
+
+let autoreload = 0;
+if (localStorage.status !== undefined) {
+    autoreload = parseInt(localStorage.status);
+    checkBox.checked = autoreload;
+    changeColorText(label, checkBox);
+}
+
+
+
 let refreshbtn = document.querySelector('.refreshbtn');
-
-
 // Конфигурация observer (за какими изменениями наблюдать)
 const config = {
     attributes: true,
@@ -33,9 +92,13 @@ const callback = function(mutationsList, observer) {
 
 // Создаём экземпляр наблюдателя с указанной функцией колбэка
 const observer = new MutationObserver(callback);
+if (autoreload) {
+    // Начинаем наблюдение за настроенными изменениями целевого элемента
+    observer.observe(refreshbtn, config);
+} else {
+    observer.disconnect();
+}
 
-// Начинаем наблюдение за настроенными изменениями целевого элемента
-observer.observe(refreshbtn, config);
 
 // Позже можно остановить наблюдение
 // observer.disconnect();
@@ -341,19 +404,27 @@ if (!tablesorter.length) {
                 console.log('Something went wrong', err);
             });
     }
-
-    let totalBlok = document.querySelector('.total_deaths');
-
-    let copyLink = document.createElement('a');
-    copyLink.setAttribute('title', 'Copy data');
-    copyLink.setAttribute('style', `text-align:center;position:relative;color:pink;`);
-    copyLink.setAttribute('id', 'copy_data');
-    let copyIcon = document.createElement('i');
-    copyIcon.setAttribute('class', 'fas fa-copy');
-    copyLink.setAttribute('style', `font-size:24px;cursor:pointer;position:relative;top:5px;left:10px;background:transparent;`);
-    copyLink.appendChild(copyIcon);
-    totalBlok.insertAdjacentElement('afterend', copyLink);
     let copyDate = document.querySelector('#copy_data');
     copyDate.addEventListener("click", copyText, false);
 
+
+    checkBox.addEventListener('change', function(e, autoreload) {
+        e.target.checked ? autoreload = true : autoreload = false;
+        localStorage.status = e.target.checked ? 1 : 0;
+        if (autoreload) {
+            location.reload();
+            checkBox.checked = parseInt(localStorage.status);
+            changeColorText(label, checkBox);
+            observer.observe(refreshbtn, config);
+
+        } else {
+            observer.disconnect();
+
+        }
+        if (localStorage.status !== undefined) {
+            checkBox.checked = parseInt(localStorage.status);
+            changeColorText(label, checkBox);
+        }
+
+    }, false);
 }
