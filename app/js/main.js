@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name     ETQW-gs4u.net
-// @version  1.1
+// @version  1.2
 // @include  https://www.gs4u.net/ru/s/*
 // @grant    none
 // @author acubick
@@ -8,6 +8,10 @@
 // @namespace https://greasyfork.org/users/776468
 // ==/UserScript==
 
+
+let advBlock = document.querySelector('.mod_gs4u_server_adv').parentElement;
+console.log('advBlock :>> ', advBlock);
+advBlock.setAttribute('style', `display:none;`);
 
 let tabsInnerContent = document.querySelector('#tabs-innerTabs');
 tabsInnerContent.setAttribute("style", `position:relative;`);
