@@ -64,6 +64,10 @@ for (let i = 0; i < timerPage.length; i++) {
     if (timerPage[i].innerText.trim() == 'si_timeleft') {
         timerString = (timerPage[i].parentElement.nextElementSibling.innerText).trim().split(':');
     }
+    if (timerPage[i].innerText.trim() == 'si_map') {
+        console.log('si_map :>> ');
+        // timerString = (timerPage[i].parentElement.nextElementSibling.innerText).trim().split(':');
+    }
 }
 
 
