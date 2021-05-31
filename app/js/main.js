@@ -78,7 +78,6 @@ timer = setInterval(function() {
     if (timeMinut <= 0) {
         // Таймер удаляется
         clearInterval(timer);
-        // Выводит сообщение что время закончилось
 
         // Создаём строку с выводом времени
         let strTimer = 'warming-up';
