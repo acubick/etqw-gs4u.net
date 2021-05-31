@@ -10,63 +10,77 @@
 
 
 let advBlock = document.querySelector('.mod_gs4u_server_adv').parentElement;
-console.log('advBlock :>> ', advBlock);
 advBlock.setAttribute('style', `display:none;`);
 
 let tabsInnerContent = document.querySelector('#tabs-innerTabs');
-tabsInnerContent.setAttribute("style", `position:relative;`);
+// tabsInnerContent.setAttribute("style", `position:relative;`);
 let rawSet = document.createElement('div');
-rawSet.setAttribute("style", `position:relative;background-color:rgba(51,51,51,.7);height:30px;width:calc(100%-1px);top:0;left:0px;
+rawSet.setAttribute("style", `background-color:rgba(51,51,51,.7);height:30px;width:calc(100%-1px);top:0;left:0px;
 border-left:1px;border-left-color:rgb(119,119,119);border-left-style:solid;
 border-bottom:1px;border-bottom-color:rgb(119,119,119);border-bottom-style:solid;
 border-right:1px;border-right-color:rgb(119,119,119);border-right-style:solid;
-display:flex;justify-content:start;`);
+display:flex;flex-direction:row;justify-content:start;align-items:center;`);
 tabsInnerContent.insertAdjacentElement('afterend', rawSet);
 
 let copyLink = document.createElement('a');
-copyLink.setAttribute('title', 'Copy data');
-copyLink.setAttribute('style', `text-align:center;position:absolute;color:pink;top:0;`);
+copyLink.setAttribute('title', 'Copy the total count to the clipboard');
+copyLink.setAttribute('style', `text-align:center;font-size:24px;cursor:pointer;background:transparent;margin-left:15px;margin-right:25px;`);
 copyLink.setAttribute('id', 'copy_data');
 let copyIcon = document.createElement('i');
 copyIcon.setAttribute('class', 'fas fa-copy');
-copyLink.setAttribute('style', `font-size:24px;cursor:pointer;position:relative;top:3px;left:15px;background:transparent;`);
 copyLink.appendChild(copyIcon);
 rawSet.appendChild(copyLink);
 
 
 //Создание чекбокса
 let checkBoxContainer = document.createElement('div');
-checkBoxContainer.setAttribute('style', `position:relative;top:-3px;left:50px;background-color:transparent;width:200px;`);
+checkBoxContainer.setAttribute('style', `display:flex;justify-content:space-between;align-items:center;background-color:transparent;width:140px;margin-right:20px;`);
 checkBoxContainer.setAttribute('id', 'checkBox_Container');
 let label = document.createElement('label');
 let checkBox = document.createElement('input');
 label.innerText = 'AutoReload';
-label.setAttribute('style', `font-size:18px;line-height:24px;text-align:left;width:0px;display:block;
-		height:35px;line-height:35px;color:#f65858;padding-left:38px;`);
+let labelAttr = 'font-size:20px;line-height:20px;text-align:center;width:130px;margin-bottom:0;';
+let labelAttr_green = 'color:#75db6c;';
+let labelAttr_red = 'color:#f65858;';
+label.setAttribute('style', `${labelAttr}${labelAttr_green}`);
 label.setAttribute('for', 'checkbox_reload');
 checkBox.setAttribute('type', 'checkbox');
 checkBox.setAttribute('id', 'checkbox_reload');
-checkBox.setAttribute('style', `width:25px;height:25px;position:absolute;top:3px;left:0;`);
-checkBoxContainer.appendChild(label);
+checkBox.setAttribute('style', `width:25px;height:25px;margin-top:-1px;`);
 checkBoxContainer.appendChild(checkBox);
+checkBoxContainer.appendChild(label);
 rawSet.insertAdjacentElement('beforeend', checkBoxContainer);
 
 
 
 //Создаем Таймер игры
 let timerContainer = document.createElement('div');
-timerContainer.setAttribute('style', `height:25px;width:300px;position:absolute;top:3px;left:250px;color:#4fb44f;font-size:22px;line-height:25px;`);
+timerContainer.setAttribute('style', `height:25px;width:185px;color:#e0cf47;font-size:22px;line-height:25px;text-align: center;`);
 rawSet.insertAdjacentElement('beforeend', timerContainer);
 let timerPage = document.querySelectorAll('b');
 let timerString = '';
+
+
+//Создаем блок информации о картах
+let mapInfo = document.createElement('div');
+mapInfo.setAttribute('style', `display:flex;flex-direction:row;align-items:center;`);
+rawSet.appendChild(mapInfo);
+let mapInfo_name = document.createElement('span');
+mapInfo_name.setAttribute('style', `font-size:24px;color:#75db6c;`);
+let mapInfo_text = document.createElement('span');
+mapInfo_text.innerText = 'current map: ';
+mapInfo_text.setAttribute('style', `font-size:20px;color:#99a0b5;margin-right:7px;`);
+mapInfo.appendChild(mapInfo_text);
+mapInfo.appendChild(mapInfo_name);
+
 // Ищем таймер на странице
 for (let i = 0; i < timerPage.length; i++) {
     if (timerPage[i].innerText.trim() == 'si_timeleft') {
         timerString = (timerPage[i].parentElement.nextElementSibling.innerText).trim().split(':');
     }
     if (timerPage[i].innerText.trim() == 'si_map') {
-        console.log('si_map :>> ');
-        // timerString = (timerPage[i].parentElement.nextElementSibling.innerText).trim().split(':');
+        let si_map = (timerPage[i].parentElement.nextElementSibling.innerText).trim().split('/');
+        mapInfo_name.innerHTML = si_map[si_map.length - 1];
     }
 }
 
@@ -103,12 +117,10 @@ timer = setInterval(function() {
 
 function changeColorText(label, checkBox) {
     if (checkBox.checked) {
-        label.setAttribute('style', `font-size:18px;line-height:24px;text-align:left;width:0px;display:block;
-	height:35px;line-height:35px;color:#75db6c;padding-left:38px;`);
+        label.setAttribute('style', `${labelAttr}${labelAttr_green}`);
     }
     if (!checkBox.checked) {
-        label.setAttribute('style', `font-size:18px;line-height:24px;text-align:left;width:0px;display:block;
-	height:35px;line-height:35px;color:#f65858;padding-left:38px;`);
+        label.setAttribute('style', `${labelAttr}${labelAttr_red}`);
     }
 }
 
