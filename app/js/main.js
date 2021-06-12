@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name     ETQW-gs4u.net
-// @version  1.2
+// @version  1.3
 // @include  https://www.gs4u.net/ru/s/*
 // @grant    none
 // @author acubick
