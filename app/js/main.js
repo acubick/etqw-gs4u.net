@@ -653,8 +653,8 @@ let imgStrogg = document.createElement('img');
 let imgGDF = document.createElement('img');
 imgStrogg.setAttribute('src', baseStrogg);
 imgGDF.setAttribute('src', baseGDF);
-imgStrogg.setAttribute('style', `height:25px;width:auto;margin-right:5px;margin-left:8px;`);
-imgGDF.setAttribute('style', `height:25px;width:auto;margin-right:6px;margin-left:5px;`);
+imgStrogg.setAttribute('style', `height:25px;width:auto;margin-right:5px;margin-left:5px;`);
+imgGDF.setAttribute('style', `height:25px;width:auto;margin-right:5px;margin-left:5px;`);
 
 let advBlock = document.querySelector('.mod_gs4u_server_adv').parentElement;
 advBlock.setAttribute('style', `display:none;`);
@@ -672,7 +672,7 @@ display:flex;flex-direction:row;justify-content:space-around;align-items:center;
 tabsInnerContent.insertAdjacentElement('afterend', rawSet);
 
 let copyLink = document.createElement('a');
-copyLink.setAttribute('title', 'Copy the total count to the clipboard');
+copyLink.setAttribute('title', 'Copy the total score to the clipboard');
 copyLink.setAttribute('style', `text-align:center;font-size:24px;cursor:pointer;background:transparent;`);
 copyLink.setAttribute('id', 'copy_data');
 let copyIcon = document.createElement('i');
@@ -734,9 +734,9 @@ let campaignInfo = document.createElement('div');
 campaignInfo.setAttribute('style', `display:flex;flex-direction:row;align-items:center;font-size:20px;line-height:20px;text-align:center;`);
 let campaignInfoData = document.createElement('span');
 campaignInfoData.setAttribute('style', `font-size:20px;line-height:20px;text-align:center;color:#96a8dd;margin-right:6px;margin-left:8px;`);
-campaignInfo.appendChild(imgStrogg);
-campaignInfo.appendChild(campaignInfoData);
 campaignInfo.appendChild(imgGDF);
+campaignInfo.appendChild(campaignInfoData);
+campaignInfo.appendChild(imgStrogg);
 campaignInfo.appendChild(campaignName);
 campaignInfo.appendChild(timeLimit);
 campaignInfo.appendChild(rules);
@@ -764,16 +764,18 @@ for (let i = 0; i < timerPage.length; i++) {
                 ++strogg;
             }
         }
-        campaignInfoData.innerText = `${strogg} - ${gdf}`;
+        campaignInfoData.innerText = `${gdf} - ${strogg}`;
     } else {
-        campaignInfoData.innerText = `${strogg} - ${gdf}`;
+        campaignInfoData.innerText = `${gdf} - ${strogg}`;
     }
     if (timerPage[i].innerText.trim() == 'si_timeleft') {
         timerString = (timerPage[i].parentElement.nextElementSibling.innerText).trim().split(':');
     }
     if (timerPage[i].innerText.trim() == 'si_map') {
         let si_map = (timerPage[i].parentElement.nextElementSibling.innerText).trim().split('/');
-        mapInfo_name.innerHTML = si_map[si_map.length - 1];
+        value = si_map[si_map.length - 1].replace('maps/', '');
+        value = value.replace('.entities', '');
+        mapInfo_name.innerHTML = value;
     }
     if (timerPage[i].innerText.trim() == 'si_rules') {
         rules.innerText = (timerPage[i].parentElement.nextElementSibling.innerText).trim();
